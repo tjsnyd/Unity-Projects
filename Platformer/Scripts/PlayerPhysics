@@ -65,7 +65,9 @@ public class PlayerPhysics : MonoBehaviour {
 			// Reduce the speed if crouching by the crouchSpeed multiplier
 			move = (crouch ? move*m_CrouchSpeed : move);
 			
-
+			if(grounded == false && jumping == false){
+				jumping=true;
+			}
 			// Move the character
 			body.velocity = new Vector2(move*m_MaxSpeed, body.velocity.y);
 			
@@ -87,19 +89,12 @@ public class PlayerPhysics : MonoBehaviour {
 			// Add a vertical force to the player.
 			grounded = false;
 			jumping = true;
-			if(Input.GetKeyDown(KeyCode.RightArrow)){
-				body.AddForce (new Vector2 (m_JumpForce, m_JumpForce));
-			}
-			else if(Input.GetKeyDown(KeyCode.LeftArrow)){
-				body.AddForce (new Vector2 (-m_JumpForce, m_JumpForce));
-			}
-			else{
-			body.AddForce (new Vector2 (0f, m_JumpForce));
-			}
+			body.AddForce (new Vector2 (m_JumpForce, m_JumpForce));
+
 		} else if (jumping && jump) {
 			jumping = false;
 			if(Input.GetKeyDown(KeyCode.RightArrow)){
-				body.AddForce (new Vector2 (m_JumpForce, m_JumpForce));
+				body.AddForce (new Vector2 (move.CompareTo(0)* m_JumpForce, m_JumpForce));
 			}
 			else if(Input.GetKeyDown(KeyCode.LeftArrow)){
 				body.AddForce (new Vector2 (-m_JumpForce, m_JumpForce));
