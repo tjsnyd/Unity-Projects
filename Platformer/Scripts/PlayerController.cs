@@ -1,3 +1,6 @@
+using UnityEngine;
+using System.Collections;
+[RequireComponent(typeof(PlayerPhysics))]
 public class PlayerController : MonoBehaviour {
 
 	private PlayerPhysics playerPhysics;
