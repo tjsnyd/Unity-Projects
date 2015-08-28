@@ -16,7 +16,7 @@ public class PlayerPhysics : MonoBehaviour {
 	private bool jumping;
 
 	private Rigidbody2D body;
-	private bool m_FacingRight = true;  // For determining which way the player is currently facing.
+	public bool m_FacingRight = true;  // For determining which way the player is currently facing.
 
 	private void Awake()
 	{
@@ -69,7 +69,12 @@ public class PlayerPhysics : MonoBehaviour {
 				jumping=true;
 			}
 			// Move the character
-			body.velocity = new Vector2(move*m_MaxSpeed, body.velocity.y);
+			if(Mathf.Abs(body.velocity.x) < Mathf.Abs(move*m_MaxSpeed)){
+				body.velocity = new Vector2(move + body.velocity.x, body.velocity.y);
+			}
+			else{
+				body.velocity = new Vector2(body.velocity.x, body.velocity.y);
+			}
 			
 			// If the input is moving the player right and the player is facing left...
 			if (move > 0 && !m_FacingRight)
@@ -89,19 +94,12 @@ public class PlayerPhysics : MonoBehaviour {
 			// Add a vertical force to the player.
 			grounded = false;
 			jumping = true;
-			body.AddForce (new Vector2 (m_JumpForce, m_JumpForce));
+			body.velocity = (new Vector2 (move.CompareTo(0)* m_JumpForce, m_JumpForce));
 
 		} else if (jumping && jump) {
 			jumping = false;
-			if(Input.GetKeyDown(KeyCode.RightArrow)){
-				body.AddForce (new Vector2 (move.CompareTo(0)* m_JumpForce, m_JumpForce));
-			}
-			else if(Input.GetKeyDown(KeyCode.LeftArrow)){
-				body.AddForce (new Vector2 (-m_JumpForce, m_JumpForce));
-			}
-			else{
-				body.AddForce (new Vector2 (0f, m_JumpForce));
-			}
+			body.velocity = (new Vector2 (move.CompareTo(0)* m_JumpForce, m_JumpForce));
+			
 		}
 	}
 
@@ -115,5 +113,9 @@ public class PlayerPhysics : MonoBehaviour {
 		Vector3 theScale = transform.localScale;
 		theScale.x *= -1f;
 		transform.localScale = theScale;
+	}
+	private bool oppositeSigns(float x, float y)
+	{
+		return ((x * y) >= 0.0f);
 	}
 }
