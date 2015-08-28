@@ -1,6 +1,3 @@
-using UnityEngine;
-using System.Collections;
-[RequireComponent(typeof(PlayerPhysics))]
 public class PlayerController : MonoBehaviour {
 
 	private PlayerPhysics playerPhysics;
@@ -12,7 +9,7 @@ public class PlayerController : MonoBehaviour {
 	public GameObject bullet;
 	public float speed;
 	private bool shot;
-	private bool fireDown, fireUp, force;
+	private bool fireDown, fireUp, force, fireDown2;
 
 	// Use this for initialization
 	void Awake () {
@@ -31,6 +28,7 @@ public class PlayerController : MonoBehaviour {
 			jump = Input.GetButtonDown("Jump");
 		}
 		fireDown = Input.GetButtonDown ("Fire1");
+		fireDown2 = Input.GetMouseButtonDown (1);
 		fireUp = Input.GetButtonUp("Fire1");
 		if (Input.GetButtonDown ("Force")) {
 			
@@ -45,13 +43,13 @@ public class PlayerController : MonoBehaviour {
 					Vector2 dir = new Vector2(mouse2.x - mouse1.x, mouse2.y - mouse1.y);
 					int pos = isPos (dir);
 					Vector2 vecDir;
-					if(pos == 0){
+					if(pos == 1){
 						vecDir = Vector2.up;
 					}
-					else if(pos == 1){
+					else if(pos == 2){
 						vecDir = Vector2.left;
 					}
-					else if(pos == 2){
+					else if(pos == 3){
 						vecDir = Vector2.down;
 					}
 					else{
@@ -77,6 +75,19 @@ public class PlayerController : MonoBehaviour {
 			print (mouse2);
 			down = false;
 		}
+		if (fireDown2 && ! force) {
+			fire.FireBullet();
+		}
+		float h = Input.GetAxis("Horizontal");
+		/*if (Input.GetKeyDown(KeyCode.Q)){//when the left mouse button is clicked
+			
+			print ("1");//print a message to act as a debug
+			if(playerPhysics.m_FacingRight)
+				fire.FireBullet(1);//look for and use the fire bullet operation
+			else
+				fire.FireBullet(-1);
+			
+		}*/
 
 				
 			//Time.fixedDeltaTime = 0F * Time.timeScale;
@@ -115,4 +126,3 @@ public class PlayerController : MonoBehaviour {
 	
 	
 }
-
