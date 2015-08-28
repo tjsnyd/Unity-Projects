@@ -14,22 +14,28 @@ public class Fire : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		
-		if (Input.GetKeyDown(KeyCode.Q)){//when the left mouse button is clicked
-			
-			print ("1");//print a message to act as a debug
-			
-			FireBullet();//look for and use the fire bullet operation
-			
-		}
+
 	}
-	
-	
 	
 	
 	public void FireBullet(){
 		
 		
+		//Clone of the bullet
+		GameObject Clone;
 		
+		//spawning the bullet at position
+		Clone = (Instantiate (bullet, Camera.main.ScreenToWorldPoint(Input.mousePosition), transform.rotation)) as GameObject;
+
+		//add force to the spawned objected
+
+		
+		Destroy (Clone.gameObject, .5f);
+	}
+	
+	public void FireBullet(float m){
+		
+
 		//Clone of the bullet
 		GameObject Clone;
 		
@@ -38,9 +44,9 @@ public class Fire : MonoBehaviour {
 		
 		Rigidbody2D body = Clone.GetComponent<Rigidbody2D> ();
 		//add force to the spawned objected
-		body.AddForce (new Vector2(speed, 0));
+		body.velocity = new Vector2(m * speed /20,0);
 	
-		Destroy (Clone.gameObject, 2);
+		Destroy (Clone.gameObject, .5f);
 	}
 
 	public void FireBullet(Vector3 m1, Vector3 m2){
@@ -53,11 +59,13 @@ public class Fire : MonoBehaviour {
 		spot2.x = 1;
 		//spawning the bullet at position
 		Clone = (Instantiate (bullet, spot, transform.rotation)) as GameObject;
-		Vector3 mag = new Vector2 ((m2.x - m1.x)*5, (m2.y - m1.y) * 5);
+		Vector3 mag = new Vector2 ((m2.x - m1.x), (m2.y - m1.y));
 		Rigidbody2D body = Clone.GetComponent<Rigidbody2D> ();
 		//add force to the spawned objected
-		body.transform.Translate(spot2, body.transform);
+		AreaEffector2D ae = Clone.GetComponent<AreaEffector2D>();
+		ae.forceMagnitude = mag.magnitude;
+		body.velocity = mag.normalized * 10;
 		
-		Destroy (Clone.gameObject, 1f);
+		Destroy (Clone.gameObject, .5f);
 	}
 }
